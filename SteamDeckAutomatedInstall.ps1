@@ -200,15 +200,15 @@ Write-Host -NoNewline "- Audio Drivers 2/2 from Valve (NAU88L21): "
 Invoke-WebRequest -URI "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/NAU88L21_x64_1.0.6.0_WHQL%20-%20DUA_BIQ_WHQL.zip" -OutFile ".\Audio_Drivers_2.zip"
 Write-Host -ForegroundColor Green "Done"
 
-Write-Host -NoNewline "- Unlocked Wireless LAN Drivers from RTK: "
-Invoke-WebRequest -URI "https://www.techpowerup.com/forums/attachments/rtk-killer-wi-fi-5-8822ce-xtreme-802-11ac_v2024-10-227-2-self-signed-fix2-zip.271297/" -OutFile ".\WLAN_Drivers.zip"
+Write-Host -NoNewline "- Wireless LAN Drivers from Windows Update: "
+Invoke-WebRequest -URI "https://catalog.s.download.windowsupdate.com/d/msdownload/update/driver/drvs/2022/11/05b73312-01e0-4e40-a991-93d11309b736_8cd43d4695c27a3f174b6e9c33034c100995e095.cab" -OutFile ".\WLAN_Drivers.cab"
 Write-Host -ForegroundColor Green "Done"
 
-Write-Host -NoNewline "- Bluetooth Drivers from Realtek: "
+Write-Host -NoNewline "- Bluetooth Drivers from Windows Update: "
 Invoke-WebRequest -URI "https://catalog.s.download.windowsupdate.com/d/msdownload/update/driver/drvs/2022/08/ad501382-9e48-4720-92c7-bcee5374671e_501f5f234304610bbbc221823de181e544c1bc09.cab" -OutFile ".\Bluetooth_Drivers.cab"
 Write-Host -ForegroundColor Green "Done"
 
-Write-Host -NoNewline "- MicroSD Card Reader Drivers from BayHubTech: "
+Write-Host -NoNewline "- MicroSD Card Reader Drivers from Windows Update: "
 Invoke-WebRequest -URI "https://catalog.s.download.windowsupdate.com/c/msdownload/update/driver/drvs/2022/10/4f20ec00-bee5-4df2-873c-3a49cf4d4f8b_0aaf931a756473e6f8be1ef890fb60c283e9e82e.cab" -OutFile ".\MicroSD_Drivers.cab"
 Write-Host -ForegroundColor Green "Done"
 
@@ -233,7 +233,7 @@ Invoke-WebRequest -URI "https://www.filecroco.com/download-file/download-rivatun
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- SteamDeckTools: "
-Invoke-WebRequest -URI "https://github.com/ayufan/steam-deck-tools/releases/download/0.5.47/SteamDeckTools-0.5.47-portable.zip" -OutFile ".\SteamDeckTools.zip"
+Invoke-WebRequest -URI "https://github.com/ayufan/steam-deck-tools/releases/download/0.6.5/SteamDeckTools-0.6.5-portable.zip" -OutFile ".\SteamDeckTools.zip"
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- EqualizerAPO: "
@@ -297,8 +297,9 @@ Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\Audio_Drive
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- WLAN Drivers: "
-Expand-Archive ".\WLAN_Drivers.zip" ".\WLAN_Drivers" -Force
-Start-Process  -FilePath "cmd.exe" -ArgumentList '/c  ".\WLAN_Drivers\RTK Killer Wi-Fi 5 8822CE Xtreme 802.11ac_v2024.10.227.2-[Self-Signed]Fix2\setup.bat"' -Wait
+New-Item .\WLAN_Drivers -ItemType Directory -ErrorAction SilentlyContinue >> $null
+Start-Process -FilePath "expand.exe" -ArgumentList "-F:* .\WLAN_Drivers.cab .\WLAN_Drivers" -Wait
+Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\WLAN_Drivers\netrtwlane.inf`" /install" -Wait
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- Bluetooth Drivers: "
