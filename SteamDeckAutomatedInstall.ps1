@@ -244,6 +244,10 @@ Write-Host -NoNewline "- EqualizerAPO Config: "
 Invoke-WebRequest -UserAgent "Wget" -URI "https://raw.githubusercontent.com/CelesteHeartsong/SteamDeckAutomatedInstall/main/EqualizerAPO_Config.txt" -OutFile ".\EqualizerAPO_Config.txt"
 Write-Host -ForegroundColor Green "Done"
 
+Write-Host -NoNewline "- EqualizerAPO VST Plugin: "
+Invoke-WebRequest -UserAgent "Wget" -URI "https://github.com/werman/noise-suppression-for-voice/releases/download/v1.03/win-rnnoise.zip" -OutFile ".\win-rnnoise.zip"
+Write-Host -ForegroundColor Green "Done"
+
 Write-Host "-----------------------------------------------------------------------"
 Write-Host
 
@@ -341,7 +345,7 @@ Write-Host
 
 
 
-Write-Host "Installing Software (Select Speakers when requested)"
+Write-Host "Installing Software (Select Speakers when requested then move to input tab, and select Microphone)"
 Write-Host "-----------------------------------------------------------------------"
 
 Write-Host -NoNewline "- ViGEmBus: "
@@ -363,6 +367,10 @@ Write-Host -ForegroundColor Green "Done"
 Write-Host -NoNewline "- EqualizerAPO: "
 Start-Process -FilePath ".\EqualizerAPO_Setup.exe" -ArgumentList "/S" -Wait
 Copy-Item ".\EqualizerAPO_Config.txt" -Destination "C:\Program Files\EqualizerAPO\config\config.txt" -Force
+Write-Host -ForegroundColor Green "Done"
+
+Write-Host -NoNewline "- EqualizerAPO Plugin: "
+Expand-Archive ".\win-rnnoise.zip" -DestinationPath "C:\Program Files\EqualizerAPO\VSTPlugins\" -Force
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host "-----------------------------------------------------------------------"

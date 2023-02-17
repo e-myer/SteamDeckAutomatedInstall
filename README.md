@@ -8,7 +8,8 @@
 - On APU setup, install as normal, but do not click "Reboot" at the end
    - Click "Finish" instead
 - EquilizerAPO will create a popup asking which audio device to apply to.
-   - Select "Speakers" then continue
+   - Select "Speakers"
+   - Move to the next tab and select "Microphone"
 - SteamDeckTools configuration will prompt for consent to submitting anonymous error and version data
    - Yes will allow this data to be submit
    - No will disable the submission of data, but will also disable auto updating
