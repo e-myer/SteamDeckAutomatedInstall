@@ -41,7 +41,7 @@ Invoke-WebRequest -URI "https://catalog.s.download.windowsupdate.com/c/msdownloa
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- VC++ All in One Redistributable: "
-Invoke-WebRequest -URI "https://github.com/abbodi1406/vcredist/releases/download/v0.64.0/VisualCppRedist_AIO_x86_x64_64.zip" -OutFile ".\VCpp.zip"
+Invoke-WebRequest -URI "https://github.com/abbodi1406/vcredist/releases/download/v0.69.0/VisualCppRedist_AIO_x86_x64_69.zip" -OutFile ".\VCpp.zip"
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- DirectX Web Setup: "
@@ -49,7 +49,7 @@ Invoke-WebRequest -URI "https://download.microsoft.com/download/1/7/1/1718CCC4-6
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- .NET 6.0 Setup: "
-Invoke-WebRequest -URI "https://download.visualstudio.microsoft.com/download/pr/08ada4db-1e64-4829-b36d-5beb71f67bff/b77050cf7e0c71d3b95418651db1a9b8/dotnet-sdk-6.0.403-win-x64.exe" -OutFile ".\dotnet6.0_Setup.exe"
+Invoke-WebRequest -URI "https://download.visualstudio.microsoft.com/download/pr/38dca5f5-f10f-49fb-b07f-a42dd123ea30/335bb4811c9636b3a4687757f9234db9/dotnet-sdk-6.0.407-win-x64.exe" -OutFile ".\dotnet6.0_Setup.exe"
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- ViGEmBus Setup: "
