@@ -41,7 +41,7 @@ Invoke-WebRequest -URI "https://catalog.s.download.windowsupdate.com/c/msdownloa
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- VC++ All in One Redistributable: "
-Invoke-WebRequest -URI "https://github.com/abbodi1406/vcredist/releases/download/v0.69.0/VisualCppRedist_AIO_x86_x64_69.zip" -OutFile ".\VCpp.zip"
+Invoke-WebRequest -URI "https://github.com/abbodi1406/vcredist/releases/download/v0.70.0/VisualCppRedist_AIO_x86_x64_70.zip" -OutFile ".\VCpp.zip"
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- DirectX Web Setup: "
