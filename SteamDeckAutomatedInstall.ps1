@@ -83,8 +83,8 @@ function download-required-files {
 
 
 
-Write-Host "Applying Windows OS Tweaks"
-Write-Host "-----------------------------------------------------------------------"
+#Write-Host "Applying Windows OS Tweaks"
+#Write-Host "-----------------------------------------------------------------------"
 
 function disable-hibernation {
 Write-Host -NoNewline "- Disabling Hibernation: "
@@ -176,8 +176,8 @@ Write-Host
 }
 
 
-Write-Host "Installing Software (Select Speakers when requested then move to input tab, and select Microphone)"
-Write-Host "-----------------------------------------------------------------------"
+#Write-Host "Installing Software (Select Speakers when requested then move to input tab, and select Microphone)"
+#Write-Host "-----------------------------------------------------------------------"
 
 function install-vigembus {
 Write-Host -NoNewline "- ViGEmBus: "
@@ -218,8 +218,8 @@ Write-Host
 }
 
 
-Write-Host "Configuring Software"
-Write-Host "-----------------------------------------------------------------------"
+#Write-Host "Configuring Software"
+#Write-Host "-----------------------------------------------------------------------"
 
 $trigger = New-ScheduledTaskTrigger -AtLogOn
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
@@ -292,10 +292,10 @@ $shortcut.TargetPath = "C:\DeckUtils\SteamDeckTools\SteamController.exe"
 $shortcut.Save()
 }
 
-Write-Host -ForegroundColor Green "Done"
+#Write-Host -ForegroundColor Green "Done"
 
-Write-Host "-----------------------------------------------------------------------"
-Write-Host
+#Write-Host "-----------------------------------------------------------------------"
+#Write-Host
 
-Write-Host " Script Completed! Please reboot your system to apply drivers/configuration. Press enter key to exit."
-Read-Host
+#Write-Host " Script Completed! Please reboot your system to apply drivers/configuration. Press enter key to exit."
+#Read-Host
