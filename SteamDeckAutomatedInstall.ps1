@@ -13,20 +13,74 @@ Clear
 
 $ProgressPreference = 'SilentlyContinue'
 
+function Save-Download {
+    <#
+    .SYNOPSIS
+        Given a the result of WebResponseObject, will download the file to disk without having to specify a name.
+    .DESCRIPTION
+        Given a the result of WebResponseObject, will download the file to disk without having to specify a name.
+    .PARAMETER WebResponse
+        A WebResponseObject from running an Invoke-WebRequest on a file to download
+    .EXAMPLE
+        # Download Microsoft Edge
+        $download = Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2109047&Channel=Stable&language=en&consent=1"
+        $download | Save-Download 
+    #>
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline)]
+        [Microsoft.PowerShell.Commands.WebResponseObject]
+        $WebResponse,
+
+        [Parameter(Mandatory = $false)]
+        [string]
+        $Directory = "."
+    )
+
+    $errorMessage = "Cannot determine filename for download."
+
+    if (!($WebResponse.Headers.ContainsKey("Content-Disposition"))) {
+        Write-Error $errorMessage -ErrorAction Stop
+    }
+
+    $content = [System.Net.Mime.ContentDisposition]::new($WebResponse.Headers["Content-Disposition"])
+    
+    $fileName = $content.FileName
+
+    if (!$fileName) {
+        Write-Error $errorMessage -ErrorAction Stop
+    }
+
+    if (!(Test-Path -Path $Directory)) {
+        New-Item -Path $Directory -ItemType Directory
+    }
+    
+    $fullPath = Join-Path -Path $Directory -ChildPath $fileName
+
+    Write-Verbose "Downloading to $fullPath"
+
+    $file = [System.IO.FileStream]::new($fullPath, [System.IO.FileMode]::Create)
+    $file.Write($WebResponse.Content, 0, $WebResponse.RawContentLength)
+    $file.Close()
+}
+
 function download-required-files {
     Write-Host "Downloading Required Files"
     Write-Host "-----------------------------------------------------------------------"
 
     Write-Host -NoNewline "- APU Chipset Drivers from Valve: "
-    Invoke-WebRequest -URI "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/Aerith%20Windows%20Driver_2302270303.zip" -OutFile ".\APU_Drivers.zip"
+    $download = Invoke-WebRequest -Uri "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/Aerith%20Windows%20Driver_2302270303.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- Audio Drivers 1/2 from Valve (cs35l41): "
-    Invoke-WebRequest -URI "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/cs35l41-V1.2.1.0.zip" -OutFile ".\Audio_Drivers_1.zip"
+    $download = Invoke-WebRequest -Uri "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/cs35l41-V1.2.1.0.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- Audio Drivers 2/2 from Valve (NAU88L21): "
-    Invoke-WebRequest -URI "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/NAU88L21_x64_1.0.6.0_WHQL%20-%20DUA_BIQ_WHQL.zip" -OutFile ".\Audio_Drivers_2.zip"
+    $download = Invoke-WebRequest -Uri "https://steamdeck-packages.steamos.cloud/misc/windows/drivers/NAU88L21_x64_1.0.6.0_WHQL%20-%20DUA_BIQ_WHQL.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- Wireless LAN Drivers from Windows Update: "
@@ -42,39 +96,47 @@ function download-required-files {
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- VC++ All in One Redistributable: "
-    Invoke-WebRequest -URI "https://github.com/abbodi1406/vcredist/releases/download/v0.70.0/VisualCppRedist_AIO_x86_x64_70.zip" -OutFile ".\VCpp.zip"
+    $download = Invoke-WebRequest -Uri "https://github.com/abbodi1406/vcredist/releases/download/v0.70.0/VisualCppRedist_AIO_x86_x64_70.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- DirectX Web Setup: "
-    Invoke-WebRequest -URI "https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe" -OutFile ".\DirectX.exe"
+    Invoke-WebRequest -URI "https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe"
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- .NET 6.0 Setup: "
-    Invoke-WebRequest -URI "https://download.visualstudio.microsoft.com/download/pr/38dca5f5-f10f-49fb-b07f-a42dd123ea30/335bb4811c9636b3a4687757f9234db9/dotnet-sdk-6.0.407-win-x64.exe" -OutFile ".\dotnet6.0_Setup.exe"
+    $download = Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/38dca5f5-f10f-49fb-b07f-a42dd123ea30/335bb4811c9636b3a4687757f9234db9/dotnet-sdk-6.0.407-win-x64.exe"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- ViGEmBus Setup: "
-    Invoke-WebRequest -URI "https://github.com/ViGEm/ViGEmBus/releases/download/v1.21.442.0/ViGEmBus_1.21.442_x64_x86_arm64.exe" -OutFile ".\ViGEmBus_Setup.exe"
+    $download = Invoke-WebRequest -Uri "https://github.com/ViGEm/ViGEmBus/releases/download/v1.21.442.0/ViGEmBus_1.21.442_x64_x86_arm64.exe"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- RivaTuner Setup: "
-    Invoke-WebRequest -URI "https://www.filecroco.com/download-file/download-rivatuner-statistics-server/14914/2360/" -OutFile ".\RivaTuner_Setup.exe"
+    $download = Invoke-WebRequest -Uri "https://www.filecroco.com/download-file/download-rivatuner-statistics-server/14914/2360/"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- SteamDeckTools: "
-    Invoke-WebRequest -URI "https://github.com/ayufan/steam-deck-tools/releases/download/0.6.14/SteamDeckTools-0.6.14-portable.zip" -OutFile ".\SteamDeckTools.zip"
+    $download = Invoke-WebRequest -Uri "https://github.com/ayufan/steam-deck-tools/releases/download/0.6.14/SteamDeckTools-0.6.14-portable.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- EqualizerAPO: "
-    Invoke-WebRequest -UserAgent "Wget" -URI "https://sourceforge.net/projects/equalizerapo/files/latest/download" -OutFile ".\EqualizerAPO_Setup.exe"
+    $download = Invoke-WebRequest -Uri "https://sourceforge.net/projects/equalizerapo/files/latest/download"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- EqualizerAPO Config: "
-    Invoke-WebRequest -UserAgent "Wget" -URI "https://raw.githubusercontent.com/CelesteHeartsong/SteamDeckAutomatedInstall/main/EqualizerAPO_Config.txt" -OutFile ".\EqualizerAPO_Config.txt"
+    $download = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/CelesteHeartsong/SteamDeckAutomatedInstall/main/EqualizerAPO_Config.txt"
+    $download | Save-Download     
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host -NoNewline "- EqualizerAPO VST Plugin: "
-    Invoke-WebRequest -UserAgent "Wget" -URI "https://github.com/werman/noise-suppression-for-voice/releases/download/v1.03/win-rnnoise.zip" -OutFile ".\win-rnnoise.zip"
+    $download = Invoke-WebRequest -Uri "https://github.com/werman/noise-suppression-for-voice/releases/download/v1.03/win-rnnoise.zip"
+    $download | Save-Download 
     Write-Host -ForegroundColor Green "Done"
 
     Write-Host "-----------------------------------------------------------------------"
@@ -111,19 +173,16 @@ Write-Host "Installing Drivers (Don't reboot on APU install!)"
 Write-Host "-----------------------------------------------------------------------"
 
 Write-Host -NoNewline "- Installing APU Chipset: "
-Expand-Archive ".\APU_Drivers.zip" -DestinationPath ".\APU_Drivers" -Force
-Start-Process ".\APU_Drivers\GFX Driver_41.1.1.30310_230227a-388790E-2302270303\Setup.exe" -Wait | Out-Null
+Start-Process ".\Aerith Windows Driver*\GFX Driver_*\Setup.exe" -Wait | Out-Null
 $apicall::SystemParametersInfo(0x009F, 4294967295, $null, 1) | Out-Null
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- Audio Drivers 1/2: "
-Expand-Archive ".\Audio_Drivers_1.zip" ".\Audio_Drivers_1" -Force
-Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\Audio_Drivers_1\cs35l41-V1.2.1.0\cs35l41.inf`" /install" -Wait
+Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\cs35l41-V*\cs35l41.inf`" /install" -Wait
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- Audio Drivers 2/2: "
-Expand-Archive ".\Audio_Drivers_2.zip" ".\Audio_Drivers_2" -Force
-Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\Audio_Drivers_2\NAU88L21_x64_1.0.6.0_WHQL - DUA_BIQ_WHQL\NAU88L21.inf`" /install" -Wait
+Start-Process -FilePath "PNPUtil.exe" -ArgumentList "/add-driver `".\NAU88L21_x64_*_WHQL - DUA_BIQ_WHQL\NAU88L21.inf`" /install" -Wait
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- WLAN Drivers: "
@@ -154,7 +213,7 @@ Write-Host "Installing Redistributables"
 Write-Host "-----------------------------------------------------------------------"
 
 Write-Host -NoNewline "- VC++ All in One: "
-Expand-Archive ".\VCpp.zip" -DestinationPath ".\Vcpp" -Force
+Expand-Archive ".\VisualCppRedist_AIO_x86_x64_*.zip" -DestinationPath ".\Vcpp" -Force
 Start-Process .\Vcpp\VisualCppRedist_AIO_x86_x64.exe /ai -Wait
 Write-Host -ForegroundColor Green "Done"
 
@@ -163,7 +222,7 @@ Start-Process -FilePath ".\DirectX.exe" -ArgumentList "/Q" -Wait
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host -NoNewline "- .NET 6.0: "
-Start-Process -FilePath ".\dotnet6.0_Setup.exe" -ArgumentList "/quiet /norestart" -Wait
+Start-Process -FilePath ".\dotnet-sdk-*-win-x64.exe" -ArgumentList "/quiet /norestart" -Wait
 Write-Host -ForegroundColor Green "Done"
 
 Write-Host "-----------------------------------------------------------------------"
@@ -174,7 +233,7 @@ Write-Host
 
 function install-vigembus {
 Write-Host -NoNewline "- ViGEmBus: "
-Start-Process -FilePath ".\ViGEmBus_Setup.exe" -ArgumentList "/qn /norestart" -Wait
+Start-Process -FilePath ".\ViGEmBus_*.exe" -ArgumentList "/qn /norestart" -Wait
 Write-Host -ForegroundColor Green "Done"
 }
 
@@ -186,19 +245,19 @@ Write-Host -ForegroundColor Green "Done"
 
 function install-rivatuner {
 Write-Host -NoNewline "- RivaTuner: "
-Start-Process -FilePath ".\RivaTuner_Setup.exe" -ArgumentList "/S" -Wait
+Start-Process -FilePath ".\RTSSSetup*.exe" -ArgumentList "/S" -Wait
 Write-Host -ForegroundColor Green "Done"
 }
 
 function install-steamdecktools {
 Write-Host -NoNewline "- SteamDeckTools: "
-Expand-Archive ".\SteamDeckTools.zip" "C:\DeckUtils\SteamDeckTools" -Force
+Expand-Archive ".\SteamDeckTools*.zip" "C:\DeckUtils\SteamDeckTools" -Force
 Write-Host -ForegroundColor Green "Done"
 }
 
 function install-equalizerapo {
 Write-Host -NoNewline "- EqualizerAPO: "
-Start-Process -FilePath ".\EqualizerAPO_Setup.exe" -ArgumentList "/S" -Wait
+Start-Process -FilePath ".\EqualizerAPO64-*.exe" -ArgumentList "/S" -Wait
 Copy-Item ".\EqualizerAPO_Config.txt" -Destination "C:\Program Files\EqualizerAPO\config\config.txt" -Force
 Write-Host -ForegroundColor Green "Done"
 
@@ -221,7 +280,7 @@ Register-ScheduledTask -TaskName "RivaTuner" -Action $action -Trigger $trigger -
 Write-Host -ForegroundColor Green "Done"
 }
 
-function deny-error-reporting-consent-steamdecktools {
+function disable-error-reporting-consent-steamdecktools {
     Write-Host -NoNewline "--- Disabling SteamDeckTools Error Reporting and Updater: "
     New-Item "C:\DeckUtils\SteamDeckTools\DisableCheckForUpdates.txt" >> $null
     New-Item "C:\DeckUtils\SteamDeckTools\DisableSentryTracking.txt" >> $null
