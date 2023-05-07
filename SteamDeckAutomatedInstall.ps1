@@ -81,11 +81,6 @@ function download-required-files {
     Write-Host
 }
 
-
-
-#Write-Host "Applying Windows OS Tweaks"
-#Write-Host "-----------------------------------------------------------------------"
-
 function disable-hibernation {
 Write-Host -NoNewline "- Disabling Hibernation: "
 Start-Process -FilePath "PowerCfg" -ArgumentList "/h /type reduced"
@@ -175,9 +170,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host
 }
 
-
 #Write-Host "Installing Software (Select Speakers when requested then move to input tab, and select Microphone)"
-#Write-Host "-----------------------------------------------------------------------"
 
 function install-vigembus {
 Write-Host -NoNewline "- ViGEmBus: "
@@ -217,10 +210,6 @@ Write-Host "--------------------------------------------------------------------
 Write-Host
 }
 
-
-#Write-Host "Configuring Software"
-#Write-Host "-----------------------------------------------------------------------"
-
 $trigger = New-ScheduledTaskTrigger -AtLogOn
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 
@@ -233,16 +222,10 @@ Write-Host -ForegroundColor Green "Done"
 }
 
 function deny-error-reporting-consent-steamdecktools {
-#Write-Host -NoNewline "- Request User Consent on use of SteamDeckTools error reporting: "
-#$userconsenttotelemetry = [System.Windows.Forms.MessageBox]::Show("Would you like to assist with improvements to SteamDeckTools by submitting anonymous error logs and version statistics to assist with addressing bugs?  If this is disabled, updates will have to be done manually." , "SteamDeckTools Error Reporting Consent" , 4, 32)
-#Write-Host -ForegroundColor Green "Done"
-
-#if($userconsenttotelemetry -eq "No") {
     Write-Host -NoNewline "--- Disabling SteamDeckTools Error Reporting and Updater: "
     New-Item "C:\DeckUtils\SteamDeckTools\DisableCheckForUpdates.txt" >> $null
     New-Item "C:\DeckUtils\SteamDeckTools\DisableSentryTracking.txt" >> $null
     Write-Host -ForegroundColor Green "Done"
-#}
 }
 
 function set-fan-control-on-login {
@@ -291,11 +274,3 @@ $shortcut = $shell.CreateShortcut("$Home\Desktop\SteamController.lnk")
 $shortcut.TargetPath = "C:\DeckUtils\SteamDeckTools\SteamController.exe"
 $shortcut.Save()
 }
-
-#Write-Host -ForegroundColor Green "Done"
-
-#Write-Host "-----------------------------------------------------------------------"
-#Write-Host
-
-#Write-Host " Script Completed! Please reboot your system to apply drivers/configuration. Press enter key to exit."
-#Read-Host
