@@ -1,6 +1,6 @@
 . ".\SteamDeckAutomatedInstall.ps1"
 
-$tasks = "download-required-files", "disable-hibernation", "reduce-fan-speed", "install-drivers", "install-redistributables", "install-vigembus", "install-deckutils", "install-rivatuner", "install-steamdecktools", "install-equalizerapo", "set-rivatuner-run-at-login", "deny-error-reporting-consent-steamdecktools-(will disable auto updates)", "set-fan-control-on-login", "deny-error-reporting-consent-steamdecktools", "set-fan-control-on-login", "set-performanceoverlay-on-login", "set-powercontrol-on-login", "set-steam-controller-on-login", "create-desktop-shortcut-for-steamdeck-tools"
+$tasks = "Get-Files", "disable-hibernation", "Limit-fan-speed", "install-drivers", "install-redistributables", "install-vigembus", "install-deckutils", "install-rivatuner", "install-steamdecktools", "install-equalizerapo", "set-rivatuner-run-at-login", "deny-error-reporting-consent-steamdecktools", "set-fan-control-on-login", "deny-error-reporting-consent-steamdecktools", "set-fan-control-on-login", "set-performanceoverlay-on-login", "set-powercontrol-on-login", "set-steam-controller-on-login", "New-desktop-shortcut-for-steamdeck-tools"
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing

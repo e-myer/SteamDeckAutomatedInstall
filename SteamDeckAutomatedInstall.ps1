@@ -64,7 +64,7 @@ function Save-Download {
     $file.Close()
 }
 
-function download-required-files {
+function Get-Files {
     Write-Host "Downloading Required Files"
     Write-Host "-----------------------------------------------------------------------"
 
@@ -149,7 +149,7 @@ Start-Process -FilePath "PowerCfg" -ArgumentList "/h /type reduced"
 Write-Host -ForegroundColor Green "Done"
 }
 
-function reduce-fan-speed {
+function Limit-fan-speed {
 Write-Host -NoNewline "- Setting CPU Idle Min to 0% (Reduce fan speed): "
 Start-Process -FilePath "PowerCfg" -ArgumentList "/SETACVALUEINDEX SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 000" -Wait
 Start-Process -FilePath "PowerCfg" -ArgumentList "/SETACTIVE SCHEME_CURRENT" -Wait
@@ -280,7 +280,7 @@ Register-ScheduledTask -TaskName "RivaTuner" -Action $action -Trigger $trigger -
 Write-Host -ForegroundColor Green "Done"
 }
 
-function disable-error-reporting-consent-steamdecktools {
+function deny-error-reporting-consent-steamdecktools {
     Write-Host -NoNewline "--- Disabling SteamDeckTools Error Reporting and Updater: "
     New-Item "C:\DeckUtils\SteamDeckTools\DisableCheckForUpdates.txt" >> $null
     New-Item "C:\DeckUtils\SteamDeckTools\DisableSentryTracking.txt" >> $null
@@ -311,7 +311,7 @@ Start-Process -FilePath "C:\DeckUtils\SteamDeckTools\SteamController.exe" -Argum
 Write-Host -ForegroundColor Green "Done"
 }
 
-function create-desktop-shortcut-for-steamdeck-tools {
+function New-desktop-shortcut-for-steamdeck-tools {
 Write-Host -NoNewline "- Creating Desktop Shortcuts for SteamDeckTools: "
 $shell = New-Object -comObject WScript.Shell
 $shortcut = $shell.CreateShortcut("$Home\Desktop\FanControl.lnk")
